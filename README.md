@@ -3,6 +3,7 @@
 ![Github](https://img.shields.io/badge/openclash.run-123456?logo=github&logoColor=fff&labelColor=red&style=for-the-badge) 
 ![Github](https://img.shields.io/badge/SSRP.run-123456?logo=github&logoColor=fff&labelColor=blue&style=for-the-badge) <br> 
 ![Github](https://img.shields.io/badge/nikki.run-123456?logo=github&logoColor=fff&labelColor=yellow&style=for-the-badge) 
+![Github](https://img.shields.io/badge/momo.run-123456?logo=github&logoColor=fff&labelColor=5cb85c&style=for-the-badge) 
 ![Github](https://img.shields.io/badge/MOSDNS.run-123456?logo=github&logoColor=fff&labelColor=FF7F00&style=for-the-badge) 
 ![Github](https://img.shields.io/badge/homeproxy.run-123456?logo=github&logoColor=fff&labelColor=3ae07c&style=for-the-badge)
 ![Github](https://img.shields.io/badge/dae.run-123456?logo=github&logoColor=fff&labelColor=4bccdf&style=for-the-badge)<br>
@@ -57,7 +58,8 @@ wget -qO imm.sh https://cafe.cpolar.top/wkdaily/zero3/raw/branch/main/zero3/imm.
 > > 【引用】https://github.com/xiaorouji/openwrt-passwall2<br>
 > > 【引用】https://github.com/vernesong/OpenClash<br>
 > > 【引用】https://dl.openwrt.ai<br>
-> > 【引用】https://github.com/morytyann/OpenWrt-mihomo/wiki<br>
+> > 【引用】https://github.com/nikkinikki-org/OpenWrt-nikki<br>
+> > 【引用】https://github.com/nikkinikki-org/OpenWrt-momo<br>
 > > 【引用】https://github.com/AdguardTeam/AdGuardHome/releases/latest<br>
 > > 【引用】https://github.com/sbwml/luci-app-mosdns<br>
 > > 【引用】https://downloads.immortalwrt.org
