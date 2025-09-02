@@ -9,7 +9,7 @@ name: Sync B Releases to A
 
 on:
   schedule:
-    - cron: "0 2 * * *"   # 每天 2 点运行
+    - cron: "25 7 * * *"
   workflow_dispatch:
 
 jobs:
@@ -19,15 +19,11 @@ jobs:
       - name: Checkout A repo
         uses: actions/checkout@v4
 
-      - name: Get all assets from B
+      - name: Get all assets
         run: |
           api="https://api.github.com/repos/wkccd/CloudRunFilesBuilder/releases/latest"
           release_json=$(curl -s $api)
-
-          # 提取 tag
           echo "TAG=$(echo "$release_json" | jq -r .tag_name)" >> $GITHUB_ENV
-
-          # 提取所有 assets 下载链接
           echo "$release_json" | jq -r '.assets[].browser_download_url' > assets.txt
 
       - name: Download all assets
@@ -38,11 +34,11 @@ jobs:
             curl -L -O "$url"
           done < assets.txt
 
-      - name: Re-publish release in A
+      - name: Re-publish release in RunFilesBuilder
         uses: softprops/action-gh-release@v2.1.0
         with:
           tag_name: ${{ env.TAG }}
-          name: "Daily Build from B (${{ env.TAG }})"
+          name: "Daily Build - (${{ env.TAG }})"
           body: "This release is auto-synced from B project daily build."
           files: |
             *.run
