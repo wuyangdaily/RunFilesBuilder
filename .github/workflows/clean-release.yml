@@ -8,7 +8,7 @@ on:
       keep_days:
         description: "保留最近多少天（默认 7）"
         required: false
-        default: "7"
+        default: "1"
 
 jobs:
   cleanup_releases:
