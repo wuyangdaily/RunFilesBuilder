@@ -37,7 +37,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           name: "Daily Build - ${{ env.TAG }}"
-          body: "This release is auto-synced from B project daily build."
+          body: "![GitHub Downloads (all assets, specific tag)](https://img.shields.io/github/downloads/wukongdaily/RunFilesBuilder/${{ env.TAG }}/total?style=for-the-badge&labelColor=black&color=%2325c2a0)"
           files: |
             *.run
         env:
