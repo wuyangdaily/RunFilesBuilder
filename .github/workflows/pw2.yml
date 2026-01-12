@@ -22,7 +22,7 @@ jobs:
       - name: Fetch latest release tag from Passwall2
         id: fetch_latest_tag
         run: |
-          latest_tag=$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall2/releases/latest | jq -r '.tag_name')
+          latest_tag=$(curl -s https://api.github.com/repos/Openwrt-Passwall/openwrt-passwall2/releases/latest | jq -r '.tag_name')
           echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
 
       - name: Clone makeself repository
@@ -35,25 +35,25 @@ jobs:
 
           # 下载 x86_64 ipk
           curl -L -O $(
-            curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall2/releases/latest \
+            curl -s https://api.github.com/repos/Openwrt-Passwall/openwrt-passwall2/releases/latest \
             | jq -r '.assets[] | select(.name | test("passwall_packages_ipk_x86_64\\.zip")) | .browser_download_url'
           )
 
           # 下载 aarch64 ipk
           curl -L -O $(
-            curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall2/releases/latest \
+            curl -s https://api.github.com/repos/Openwrt-Passwall/openwrt-passwall2/releases/latest \
             | jq -r '.assets[] | select(.name | test("passwall_packages_ipk_aarch64_cortex-a53\\.zip")) | .browser_download_url'
           )
 
 
           # 下载luci app ipk
           curl -L -O $(
-            curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall2/releases/latest \
+            curl -s https://api.github.com/repos/Openwrt-Passwall/openwrt-passwall2/releases/latest \
             | jq -r '.assets[] | select(.name | test("luci-.*-passwall2.*\\.ipk")) | .browser_download_url' | head -1
           )
           # 下载luci语言包ipk
           curl -L -O $(
-            curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall2/releases/latest \
+            curl -s https://api.github.com/repos/Openwrt-Passwall/openwrt-passwall2/releases/latest \
             | jq -r '.assets[] | select(.name | test("luci-.*-passwall2.*\\.ipk")) | .browser_download_url' | tail -1
           )
 
