@@ -1,10 +1,10 @@
 #!/bin/bash
+set -e
 
-# 平台基础URL
 declare -A PLATFORMS=(
-  ["x86_64"]="https://downloads.immortalwrt.org/releases/24.10.2/packages/x86_64"
-  ["aarch64_generic"]="https://downloads.immortalwrt.org/releases/24.10.2/packages/aarch64_generic"
-  ["aarch64_cortex-a53"]="https://downloads.immortalwrt.org/releases/24.10.2/packages/aarch64_cortex-a53"
+  ["x86_64"]="https://mirrors.pku.edu.cn/immortalwrt/releases/24.10.4/packages/x86_64"
+  ["aarch64_generic"]="https://mirrors.pku.edu.cn/immortalwrt/releases/24.10.4/packages/aarch64_generic"
+  ["aarch64_cortex-a53"]="https://mirrors.pku.edu.cn/immortalwrt/releases/24.10.4/packages/aarch64_cortex-a53"
 )
 
 # 各类包对应的目录
@@ -14,8 +14,13 @@ declare -A PACKAGE_SOURCES=(
   ["dufs"]="packages"
 )
 
-# 当前目录下创建平台输出目录
 OUT_DIR=$(pwd)
+TMP_DIR="$(mktemp -d)"
+
+cleanup() {
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
 
 for platform in "${!PLATFORMS[@]}"; do
   BASE_URL="${PLATFORMS[$platform]}"
@@ -26,25 +31,32 @@ for platform in "${!PLATFORMS[@]}"; do
 
   for keyword in "${!PACKAGE_SOURCES[@]}"; do
     subdir="${PACKAGE_SOURCES[$keyword]}"
-    URL="${BASE_URL}/${subdir}/"
+    URL="${BASE_URL}/${subdir}"
+    PKG_INDEX="${TMP_DIR}/${platform}_${subdir}_Packages"
 
-    echo "🔍 正在从 $URL 查找 $keyword"
+    echo "🔍 从 Packages.gz 查找 $keyword"
 
-    PACKAGE_LIST=$(curl -s "$URL" | grep -oE 'href="[^"]+\.ipk"' | cut -d'"' -f2)
-
-    if [ -z "$PACKAGE_LIST" ]; then
-      echo "⚠️ 无法读取 $URL 的包列表"
+    # 下载并解压 Packages.gz
+    if ! curl -fsL "${URL}/Packages.gz" | gunzip -c > "$PKG_INDEX"; then
+      echo "⚠️ 无法获取 ${URL}/Packages.gz"
       continue
     fi
 
-    FILE=$(echo "$PACKAGE_LIST" | grep "^${keyword}.*\.ipk" | head -n 1)
+    # 从 Filename 字段中匹配 ipk
+    FILE=$(awk -v kw="$keyword" '
+      $1=="Filename:" && $2 ~ "^"kw".*\\.ipk$" {
+        print $2; exit
+      }
+    ' "$PKG_INDEX")
+
     if [ -n "$FILE" ]; then
       echo "⬇️ 正在下载: $FILE"
-      curl -s -L -o "${SAVE_DIR}/${FILE}" "${URL}${FILE}"
-      # 🚧 如果文件名中含 ~，重命名为 -
+      curl -fsL -o "${SAVE_DIR}/${FILE##*/}" "${URL}/${FILE}"
+
+      # 🚧 文件名中含 ~ 的修正
       if [[ "$FILE" == *"~"* ]]; then
-        NEW_FILE=$(echo "$FILE" | tr '~' '-')
-        mv "${SAVE_DIR}/${FILE}" "${SAVE_DIR}/${NEW_FILE}"
+        NEW_FILE=$(basename "$FILE" | tr '~' '-')
+        mv "${SAVE_DIR}/$(basename "$FILE")" "${SAVE_DIR}/${NEW_FILE}"
         echo "🔧 已重命名为: $NEW_FILE"
       fi
     else
@@ -53,4 +65,4 @@ for platform in "${!PLATFORMS[@]}"; do
   done
 done
 
-echo "✅ 下载完成，文件已分别存入 各自目录中。"
+echo "✅ 下载完成，文件已分别存入 x86_64、aarch64_generic、aarch64_cortex-a53 目录中。"
