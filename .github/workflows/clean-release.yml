@@ -1,6 +1,8 @@
 name: Cleanup Old Releases
 
 on:
+  schedule:
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       keep_days:
